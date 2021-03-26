@@ -78,6 +78,7 @@ public class MarketController {
 
 		cartRepo.deleteAll();
 
+		// 얌
 		return true;
 	}
 

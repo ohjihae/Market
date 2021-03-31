@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8080
 
 spring:
   servlet:
@@ -16,3 +16,7 @@ spring:
   jpa:
     show-sql: true # 데이터처리할 때 SQL문을 보여줌
     generate-ddl: true # 클래스 정의에 따른 테이블 및 데이터베이스 객체 생성
+  rabbitmq:
+    host: ec2-3-34-127-170.ap-northeast-2.compute.amazonaws.com
+    username: rabbitmq
+    password: password123    

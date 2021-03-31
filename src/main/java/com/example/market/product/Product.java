@@ -22,13 +22,13 @@ public class Product {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	@Column(columnDefinition = "TEXT")
+	@Column
 	private String name;
 	private long price;
 	private String weight;
 	private String origin;
 	private String shelfLife;
 	private String productTitleImage;
-	private String pfoductDetailImage;
+	private String productDetailImage;
 	private String stuff;
 }

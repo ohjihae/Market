@@ -18,16 +18,19 @@ import com.example.market.product.Product;
 @RestController
 public class MarketController {
 
+	private PurchaseOrderService service;
+
 	private CartRepository cartRepo;
 	private PurchaseOrderRepository orderRepo;
 	private OrderProductRepository orderProductRepo;
 
 	@Autowired
 	public MarketController(CartRepository cartRepo, PurchaseOrderRepository orderRepo,
-			OrderProductRepository orderProductRepo) {
+			OrderProductRepository orderProductRepo, PurchaseOrderService service) {
 		this.cartRepo = cartRepo;
 		this.orderRepo = orderRepo;
 		this.orderProductRepo = orderProductRepo;
+		this.service = service;
 	}
 
 	// 장바구니 갖고오기
@@ -58,7 +61,7 @@ public class MarketController {
 
 	// 구매 -> 구매 제품 추가 -> 장바구니 전체 비우기
 	@RequestMapping(value = "/purchase", method = RequestMethod.POST)
-	public boolean purchase() {
+	public boolean purchase() throws Exception {
 		List<Cart> carts = cartRepo.findAll();
 		PurchaseOrder purchaseOrder = new PurchaseOrder();
 		purchaseOrder.setOrderDate(new Date());
@@ -72,43 +75,20 @@ public class MarketController {
 			purchaseOrder.getOrderProduct().add(orderProduct);
 		}
 
-		System.out.println("purchaseOrder = " + purchaseOrder);
+		System.out.println("purchaseOrder = " + carts);
 
 		orderRepo.save(purchaseOrder);
-
+		System.out.println("확인-------------------" + purchaseOrder);
+		service.purchase(purchaseOrder);
 		cartRepo.deleteAll();
 
-		// 얌
 		return true;
 	}
 
 	// 구매 제품 갖고오기
-	@RequestMapping(value = "/orderProduct", method = RequestMethod.GET)
+	@RequestMapping(value = "/purchase", method = RequestMethod.GET)
 	public List<OrderProduct> getOrderProduct() {
 		return orderProductRepo.findAll();
 	}
 
-	//
-//	@RequestMapping(value = "/purchase", method = RequestMethod.POST)
-//	public PurchaseOrder purchase(@RequestBody PurchaseOrder purchaseOrder) {
-//		return orderRepo.save(purchaseOrder);
-//	}
-//
-//	@RequestMapping(value = "/purchase", method = RequestMethod.GET)
-//	public List<PurchaseOrder> getPurchase() {
-//		return orderRepo.findAll();
-//	}
-//
-//	@RequestMapping(value = "/purchase/{id}", method = RequestMethod.POST)
-//	public PurchaseOrder addpurchase(@PathVariable("id") long id, HttpServletResponse res,
-//			@RequestBody PurchaseOrder purchaseOrder) {
-//		Cart cart = cartRepo.findById(id).orElse(null);
-//		OrderProduct orderProduct = orderProductRepo.findById(id).orElse(null);
-//		if (cart == null) {
-//			res.setStatus(HttpServletResponse.SC_NOT_FOUND);
-//			return null;
-//		}
-//		orderProduct.setProduct(cart.getProduct());
-//		return orderRepo.save(purchaseOrder);
-//	}
 }

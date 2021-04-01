@@ -31,4 +31,5 @@ public class Product {
 	private String productTitleImage;
 	private String productDetailImage;
 	private String stuff;
+	private String category;
 }

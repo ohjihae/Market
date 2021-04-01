@@ -42,7 +42,18 @@ public class MarketController {
 	// 장바구니 추가하기
 	@RequestMapping(value = "/cart", method = RequestMethod.POST)
 	public Cart addCart(@RequestBody Cart cart) {
-		return cartRepo.save(cart);
+
+		System.out.println("cart의 Product : " + cart.getProduct());
+		Cart cart2 = cartRepo.findByProduct(cart.getProduct());
+		System.out.println("cart2 정보" + cart2);
+
+		if (cart2 == null) {
+			cart.setQuantity(1);
+			return cartRepo.save(cart);
+		}
+		cart2.setQuantity(cart2.getQuantity() + 1);
+		cartRepo.save(cart2);
+		return cart2;
 	}
 
 	// 장바구니 id로 삭제

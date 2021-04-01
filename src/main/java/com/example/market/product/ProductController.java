@@ -43,4 +43,10 @@ public class ProductController {
 	public List<Product> getProductsByStuff(@RequestParam("keyword") String keyword) {
 		return productRepo.findByStuffContaining(keyword);
 	}
+
+	// GET /product/search/category?keyword=채소
+	@RequestMapping(value = "/product/search/category", method = RequestMethod.GET)
+	public List<Product> getProductsByCategory(@RequestParam("keyword") String keyword) {
+		return productRepo.findByCategoryContaining(keyword);
+	}
 }

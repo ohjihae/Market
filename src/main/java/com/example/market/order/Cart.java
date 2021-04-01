@@ -28,6 +28,8 @@ public class Cart {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
+	private long quantity;
+
 	@OneToOne
 	private Product product;
 }

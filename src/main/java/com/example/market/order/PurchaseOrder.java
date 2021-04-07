@@ -31,6 +31,7 @@ public class PurchaseOrder {
 	private long id;
 
 	private Date orderDate;
+	private String UserId;
 
 	@OneToMany(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "purchaseOrderId")

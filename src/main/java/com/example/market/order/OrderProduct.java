@@ -32,4 +32,5 @@ public class OrderProduct {
 	private String productName;
 	private String productTitleImage;
 	private long productPrice;
+	private long productQuantity;
 }

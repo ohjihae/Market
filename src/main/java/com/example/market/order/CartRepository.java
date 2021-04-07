@@ -11,4 +11,6 @@ import com.example.market.product.Product;
 public interface CartRepository extends JpaRepository<Cart, Long> {
 //	public List<Cart> findByProduct(Product product);
 	public Cart findByProduct(Product product);
+
+	public List<Cart> findByUserId(String userId);
 }

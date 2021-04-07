@@ -29,6 +29,7 @@ public class Cart {
 	private long id;
 
 	private long quantity;
+	private String userId;
 
 	@OneToOne
 	private Product product;

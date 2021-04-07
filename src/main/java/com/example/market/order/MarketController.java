@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.market.product.Product;
+import com.example.market.security.Auth;
+import com.example.market.security.Profile;
 
 @RestController
 public class MarketController {
@@ -34,14 +38,24 @@ public class MarketController {
 	}
 
 	// 장바구니 갖고오기
+	@Auth
 	@RequestMapping(value = "/cart", method = RequestMethod.GET)
-	public List<Cart> getCart() {
-		return cartRepo.findAll();
+	public List<Cart> getCart(HttpServletRequest req) {
+		System.out.println("--------- controller method profile ---------");
+		Profile profile = (Profile) req.getAttribute("profile");
+		System.out.println(profile);
+
+		return cartRepo.findByUserId(profile.getUserId());
 	}
 
 	// 장바구니 추가하기
+	@Auth
 	@RequestMapping(value = "/cart", method = RequestMethod.POST)
-	public Cart addCart(@RequestBody Cart cart) {
+	public Cart addCart(@RequestBody Cart cart, HttpServletRequest req) {
+
+		System.out.println("--------- controller method profile ---------");
+		Profile profile = (Profile) req.getAttribute("profile");
+		System.out.println(profile);
 
 		System.out.println("cart의 Product : " + cart.getProduct());
 		Cart cart2 = cartRepo.findByProduct(cart.getProduct());
@@ -71,9 +85,14 @@ public class MarketController {
 	}
 
 	// 구매 -> 구매 제품 추가 -> 장바구니 전체 비우기
+	@Auth
 	@RequestMapping(value = "/purchase", method = RequestMethod.POST)
-	public boolean purchase() throws Exception {
-		List<Cart> carts = cartRepo.findAll();
+	public boolean purchase(HttpServletRequest req) throws Exception {
+		System.out.println("--------- controller method profile ---------");
+		Profile profile = (Profile) req.getAttribute("profile");
+		System.out.println(profile);
+
+		List<Cart> carts = cartRepo.findByUserId(profile.getUserId());
 		PurchaseOrder purchaseOrder = new PurchaseOrder();
 		purchaseOrder.setOrderDate(new Date());
 		purchaseOrder.setOrderProduct(new ArrayList<OrderProduct>());
@@ -81,7 +100,8 @@ public class MarketController {
 		for (Cart cart : carts) {
 			OrderProduct orderProduct = OrderProduct.builder().productName(cart.getProduct().getName())
 					.productPrice(cart.getProduct().getPrice()).productId(cart.getProduct().getId())
-					.productTitleImage(cart.getProduct().getProductTitleImage()).build();
+					.productTitleImage(cart.getProduct().getProductTitleImage()).productQuantity(cart.getQuantity())
+					.build();
 
 			purchaseOrder.getOrderProduct().add(orderProduct);
 		}
@@ -96,10 +116,10 @@ public class MarketController {
 		return true;
 	}
 
-	// 구매 제품 갖고오기
-	@RequestMapping(value = "/purchase", method = RequestMethod.GET)
-	public List<OrderProduct> getOrderProduct() {
-		return orderProductRepo.findAll();
+	// 구매 목록 갖고오기
+	@RequestMapping(value = "/purchaseOrder", method = RequestMethod.GET)
+	public List<PurchaseOrder> getPurchaseOrder() {
+		return orderRepo.findAll(Sort.by("id").descending());
 	}
 
 }

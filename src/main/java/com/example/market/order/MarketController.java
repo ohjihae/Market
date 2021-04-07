@@ -57,6 +57,7 @@ public class MarketController {
 		Profile profile = (Profile) req.getAttribute("profile");
 		System.out.println(profile);
 
+		cart.setUserId(profile.getUserId());
 		System.out.println("cart의 Product : " + cart.getProduct());
 		Cart cart2 = cartRepo.findByProduct(cart.getProduct());
 		System.out.println("cart2 정보" + cart2);
@@ -96,6 +97,7 @@ public class MarketController {
 		PurchaseOrder purchaseOrder = new PurchaseOrder();
 		purchaseOrder.setOrderDate(new Date());
 		purchaseOrder.setOrderProduct(new ArrayList<OrderProduct>());
+		purchaseOrder.setUserId(profile.getUserId());
 
 		for (Cart cart : carts) {
 			OrderProduct orderProduct = OrderProduct.builder().productName(cart.getProduct().getName())

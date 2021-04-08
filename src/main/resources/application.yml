@@ -28,12 +28,44 @@ spring:
     host: ec2-13-125-229-154.ap-northeast-2.compute.amazonaws.com
     username: rabbitmq
     password: password123   
-  eureka:
-    client:
-      service-url:
-      # 유레카의 ec2 주소
-      default-zone: http://ec2-3-36-141-39.ap-northeast-2.compute.amazonaws.com:8761/eureka/
-    instance:
-    # gateway의 ec2 주소
-      hostname: ec2-3-36-141-39.ap-northeast-2.compute.amazonaws.com 
+
+eureka:
+  client:
+    service-url:
+      # 유레카 서버 주소를 작성
+      default-zone: http://192.168.0.31:8761/eureka/
+  instance:
+    # 클라이언트의 주소(자기 자신 서비스의 호스트명 ip addr, domain name)
+    # AWS에서는 퍼블릭 IP를 안 쓰면 사설 IP대역으로 나옴.
+    # 필수적으로 자신의 퍼블릭 ip주소나 도메인을 넣어줘야 함
+    hostname: localhost
+
+
+api:
+  base-path: http://localhost:8080
+---
+
+spring:
+  profiles: prod
+  redis:
+    host: 15.164.171.148
+    port: 6379
+
+eureka:
+  client:
+    service-url:
+      # 유레카 서버의 주소를 작성
+      # 유레카 설치된 ec2 ip 주소:8761/eureka/
+      defaultZone: http://3.36.141.39:8761/eureka/
+  instance:
+      # 본인 서비스의 ec2 ip 주소
+    hostname: 13.124.253.19
   
+api:
+  base-path: http://13.124.253.19:8080/
+
+
+# 클라이언트 부하 분산 활성화
+ribbon:
+  eureka:
+    enabled: true

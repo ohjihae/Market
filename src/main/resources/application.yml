@@ -20,6 +20,13 @@ spring:
   jpa:
     show-sql: true # 데이터처리할 때 SQL문을 보여줌
     generate-ddl: true # 클래스 정의에 따른 테이블 및 데이터베이스 객체 생성
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 5
+        order_inserts: true
+        order_updates: true
+        generate_statistics: true
   redis:
     host: 15.164.171.148
     port: 6379
@@ -28,7 +35,7 @@ spring:
     host: ec2-13-125-229-154.ap-northeast-2.compute.amazonaws.com
     username: rabbitmq
     password: password123   
-
+  
 eureka:
   client:
     service-url:
@@ -62,7 +69,7 @@ eureka:
     hostname: 13.124.253.19
   
 api:
-  base-path: http://13.124.253.19:8080/
+  base-path: http://13.124.253.19:8080
 
 
 # 클라이언트 부하 분산 활성화
